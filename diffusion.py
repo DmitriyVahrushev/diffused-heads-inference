@@ -74,16 +74,16 @@ class Diffusion(nn.Module):
     def get_q_params(self, xt, timesteps, eps_pred=None, x0=None):
         if x0 is None:
         # predict x0 from xt and eps_pred
-            coef1_x0 = coef1_x0.to(xt.device)
-            coef2_x0 = coef2_x0.to(xt.device)
+            self.coef1_x0 = self.coef1_x0.to(xt.device)
+            self.coef2_x0 = self.coef2_x0.to(xt.device)
             coef1_x0 = self.expand(self.coef1_x0[timesteps])
             coef2_x0 = self.expand(self.coef2_x0[timesteps])
             x0 = coef1_x0 * xt - coef2_x0 * eps_pred
             x0 = x0.clamp(-1, 1)
 
         # q(x_{t-1} | x_t, x_0)
-        coef1_q = coef1_q.to(xt.device)
-        coef2_q = coef2_q.to(xt.device)
+        self.coef1_q = self.coef1_q.to(xt.device)
+        self.coef2_q = self.coef2_q.to(xt.device)
         coef1_q = self.expand(self.coef1_q[timesteps])
         coef2_q = self.expand(self.coef2_q[timesteps])
         q_mean = coef1_q * x0 + coef2_q * xt
